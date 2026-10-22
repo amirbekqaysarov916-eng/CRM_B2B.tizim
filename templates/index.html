@@ -1,0 +1,109 @@
+
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#b70f20">
+  <meta name="description" content="SAGBAN B2B — buyurtmalar, mijozlar, ombor va moliya boshqaruvi">
+  <title>SAGBAN CRM | Boshqaruv paneli</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <section id="login-screen" class="login-screen" aria-labelledby="login-heading">
+    <div class="login-card">
+      <div class="brand brand--login"><span class="brand-icon" aria-hidden="true">S</span><span><strong>SAGBAN</strong><small>B2B DISTRIBUTION</small></span></div>
+      <div class="login-intro"><span class="eyebrow">ADMIN PANEL</span><h1 id="login-heading">Xush kelibsiz</h1><p>Davom etish uchun administrator hisobingizga kiring.</p></div>
+      <form id="login-form" class="form-stack" autocomplete="on">
+        <label for="login-username">Login</label>
+        <input id="login-username" name="username" type="text" autocomplete="username" required placeholder="Administrator logini">
+        <label for="login-password">Parol</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required placeholder="Parolingiz">
+        <p id="login-error" class="form-error" role="alert" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block">Tizimga kirish</button>
+      </form>
+      <p class="login-foot">SAGBAN CRM · Himoyalangan boshqaruv tizimi</p>
+    </div>
+  </section>
+
+  <div id="app-shell" class="app-shell" hidden>
+    <aside id="sidebar" class="sidebar" aria-label="Asosiy navigatsiya">
+      <div class="sidebar-brand"><div class="brand"><span class="brand-icon" aria-hidden="true">S</span><span><strong>SAGBAN</strong><small>ADMIN PANEL</small></span></div><button id="sidebar-close" class="icon-btn sidebar-close" aria-label="Menyuni yopish">×</button></div>
+      <div class="sidebar-label">BOSHQARUV</div>
+      <nav id="main-nav" class="nav-list">
+        <button type="button" class="nav-link is-active" data-page="dashboard" aria-current="page"><span aria-hidden="true">▦</span> Dashboard</button>
+        <button type="button" class="nav-link" data-page="orders"><span aria-hidden="true">▤</span> Buyurtmalar <span id="nav-orders-count" class="nav-count" hidden>0</span></button>
+        <button type="button" class="nav-link" data-page="customers"><span aria-hidden="true">♙</span> Mijozlar</button>
+        <button type="button" class="nav-link" data-page="products"><span aria-hidden="true">◈</span> Mahsulotlar</button>
+        <button type="button" class="nav-link" data-page="warehouse"><span aria-hidden="true">▣</span> Ombor</button>
+        <button type="button" class="nav-link" data-page="payments"><span aria-hidden="true">₸</span> To‘lovlar</button>
+        <button type="button" class="nav-link" data-page="news"><span aria-hidden="true">◉</span> Yangiliklar</button>
+      </nav>
+      <div class="sidebar-bottom"><span class="connection-indicator" id="connection-indicator">● Ulanish tekshirilmoqda</span><button id="logout-btn" class="nav-link logout-btn" type="button"><span aria-hidden="true">⇥</span> Chiqish</button></div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="topbar-left"><button id="sidebar-open" class="icon-btn mobile-menu" type="button" aria-label="Menyuni ochish">☰</button><div><span class="eyebrow">SAGBAN / BOSHQARUV</span><h2 id="topbar-title">Dashboard</h2></div></div>
+        <div class="topbar-right"><span id="current-date" class="date-pill"></span><button id="refresh-btn" class="icon-btn" type="button" title="Ma’lumotlarni yangilash" aria-label="Yangilash">↻</button><span class="user-chip"><span class="avatar">A</span><span id="admin-name">Administrator</span></span></div>
+      </header>
+
+      <main id="main-content" class="main-content">
+        <section id="page-dashboard" class="page is-active" aria-labelledby="dashboard-title">
+          <div class="page-heading"><div><span class="eyebrow">UMUMIY KO‘RINISH</span><h1 id="dashboard-title">Dashboard</h1><p>Savdo, buyurtmalar va omborning joriy holati.</p></div><button class="btn btn-primary" type="button" data-open-modal="order-modal">+ Yangi buyurtma</button></div>
+          <div class="stats-grid">
+            <article class="stat-card stat-card--red"><span>Yangi buyurtmalar</span><strong id="stat-new-orders">—</strong><small>Ko‘rib chiqilishi kerak</small></article>
+            <article class="stat-card stat-card--amber"><span>Tayyorlanmoqda</span><strong id="stat-preparing">—</strong><small>Omborda ishlanmoqda</small></article>
+            <article class="stat-card stat-card--blue"><span>Yo‘ldagi buyurtmalar</span><strong id="stat-on-way">—</strong><small>Yetkazib berish jarayonida</small></article>
+            <article class="stat-card stat-card--green"><span>Yetkazilgan</span><strong id="stat-delivered">—</strong><small>Yakunlangan buyurtmalar</small></article>
+            <article class="stat-card"><span>Umumiy savdo</span><strong id="stat-sales">—</strong><small>Yetkazilgan buyurtmalar, so‘m</small></article>
+            <article class="stat-card"><span>Jami qarzdorlik</span><strong id="stat-debt">—</strong><small>Mijozlar balansi, so‘m</small></article>
+            <article class="stat-card"><span>Faol mijozlar</span><strong id="stat-customers">—</strong><small>Ro‘yxatdagi mijozlar</small></article>
+            <article class="stat-card"><span>Mahsulotlar</span><strong id="stat-products">—</strong><small>Katalogdagi faol mahsulotlar</small></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel"><div class="panel-heading"><h2>Buyurtmalar holati</h2><span class="muted">Statuslar kesimida</span></div><div id="status-breakdown" class="status-breakdown"><p class="empty-state">Ma’lumotlar yuklanmoqda...</p></div></article>
+            <article class="panel"><div class="panel-heading"><h2>Tezkor amallar</h2></div><div class="quick-actions"><button class="quick-action" type="button" data-open-modal="customer-modal">+ Mijoz qo‘shish</button><button class="quick-action" type="button" data-open-modal="product-modal">+ Mahsulot qo‘shish</button><button class="quick-action" type="button" data-open-modal="stock-modal">+ Omborga kirim</button><button class="quick-action" type="button" data-open-modal="payment-modal">+ To‘lov kiritish</button></div></article>
+          </div>
+          <article class="panel"><div class="panel-heading"><h2>So‘nggi buyurtmalar</h2><button class="text-button" type="button" data-page="orders">Barchasini ko‘rish →</button></div><div class="table-scroll"><table><thead><tr><th>№</th><th>Mijoz</th><th>Summa</th><th>Status</th><th>Sana</th><th></th></tr></thead><tbody id="dashboard-orders-body"><tr><td colspan="6" class="empty-state">Yuklanmoqda...</td></tr></tbody></table></div></article>
+        </section>
+
+        <section id="page-orders" class="page" aria-labelledby="orders-title" hidden>
+          <div class="page-heading"><div><span class="eyebrow">SAVDO</span><h1 id="orders-title">Buyurtmalar</h1><p>Buyurtma qilingan va amalda tortilgan kilogrammni boshqaring.</p></div><button class="btn btn-primary" type="button" data-open-modal="order-modal">+ Buyurtma yaratish</button></div>
+          <div class="panel"><div class="toolbar"><label class="sr-only" for="orders-search">Buyurtma qidirish</label><input id="orders-search" type="search" placeholder="Buyurtma raqami yoki mijoz..."><label class="sr-only" for="orders-status-filter">Status</label><select id="orders-status-filter"><option value="">Barcha statuslar</option><option value="NEW">Yangi</option><option value="ACCEPTED">Qabul qilingan</option><option value="PREPARING">Tayyorlanmoqda</option><option value="READY">Tayyor</option><option value="ON_THE_WAY">Yo‘lda</option><option value="DELIVERED">Yetkazilgan</option><option value="CANCELLED">Bekor qilingan</option></select></div><div class="table-scroll"><table><thead><tr><th>Buyurtma</th><th>Mijoz</th><th>Taxminiy summa</th><th>Yakuniy summa</th><th>Status</th><th>Sana</th><th>Amallar</th></tr></thead><tbody id="orders-table-body"><tr><td colspan="7" class="empty-state">Yuklanmoqda...</td></tr></tbody></table></div></div>
+        </section>
+
+        <section id="page-customers" class="page" aria-labelledby="customers-title" hidden><div class="page-heading"><div><span class="eyebrow">HAMKORLAR</span><h1 id="customers-title">Mijozlar</h1><p>Do‘konlar, login kodlari, limitlar va qarzdorlik.</p></div><button class="btn btn-primary" type="button" data-open-modal="customer-modal">+ Mijoz qo‘shish</button></div><div class="panel"><div class="toolbar"><label class="sr-only" for="customers-search">Mijoz qidirish</label><input id="customers-search" type="search" placeholder="Ism, telefon yoki login kodi..."></div><div class="table-scroll"><table><thead><tr><th>№</th><th>Mijoz</th><th>Telefon</th><th>Login kodi</th><th>Kredit limiti</th><th>Qarzdorlik</th><th>Holat</th></tr></thead><tbody id="customers-table-body"><tr><td colspan="7" class="empty-state">Yuklanmoqda...</td></tr></tbody></table></div></div></section>
+
+        <section id="page-products" class="page" aria-labelledby="products-title" hidden><div class="page-heading"><div><span class="eyebrow">KATALOG</span><h1 id="products-title">Mahsulotlar</h1><p>Narxlar, qoldiqlar va minimal ombor zaxirasi.</p></div><button class="btn btn-primary" type="button" data-open-modal="product-modal">+ Mahsulot qo‘shish</button></div><div class="panel"><div class="toolbar"><label class="sr-only" for="products-search">Mahsulot qidirish</label><input id="products-search" type="search" placeholder="Mahsulot nomi..."></div><div class="table-scroll"><table><thead><tr><th>№</th><th>Mahsulot</th><th>Narx (so‘m/kg)</th><th>Qoldiq (kg)</th><th>Minimum (kg)</th><th>Holat</th></tr></thead><tbody id="products-table-body"><tr><td colspan="6" class="empty-state">Yuklanmoqda...</td></tr></tbody></table></div></div></section>
+
+        <section id="page-warehouse" class="page" aria-labelledby="warehouse-title" hidden><div class="page-heading"><div><span class="eyebrow">LOGISTIKA</span><h1 id="warehouse-title">Ombor</h1><p>Qoldiqni nazorat qilish va mahsulot kirim qilish.</p></div><button class="btn btn-primary" type="button" data-open-modal="stock-modal">+ Kirim qilish</button></div><div class="panel"><div class="table-scroll"><table><thead><tr><th>Mahsulot</th><th>Qoldiq (kg)</th><th>Minimal zaxira (kg)</th><th>Holat</th><th>Amal</th></tr></thead><tbody id="warehouse-table-body"><tr><td colspan="5" class="empty-state">Yuklanmoqda...</td></tr></tbody></table></div></div></section>
+
+        <section id="page-payments" class="page" aria-labelledby="payments-title" hidden><div class="page-heading"><div><span class="eyebrow">MOLIYA</span><h1 id="payments-title">To‘lovlar</h1><p>Mijozlar to‘lovlari va qarzdorlikni kuzatish.</p></div><button class="btn btn-primary" type="button" data-open-modal="payment-modal">+ To‘lov kiritish</button></div><div class="panel"><div class="table-scroll"><table><thead><tr><th>№</th><th>Mijoz ID</th><th>Summa</th><th>Izoh</th><th>Sana</th></tr></thead><tbody id="payments-table-body"><tr><td colspan="5" class="empty-state">Yuklanmoqda...</td></tr></tbody></table></div></div></section>
+
+        <section id="page-news" class="page" aria-labelledby="news-title" hidden><div class="page-heading"><div><span class="eyebrow">XABARNOMALAR</span><h1 id="news-title">Yangiliklar</h1><p>Mijozlarga ko‘rsatiladigan e’lonlar.</p></div><button class="btn btn-primary" type="button" data-open-modal="news-modal">+ Yangilik qo‘shish</button></div><div id="news-list" class="news-grid"><p class="empty-state">Yuklanmoqda...</p></div></section>
+      </main>
+      <footer class="footer">SAGBAN CRM <span id="footer-year"></span> · B2B Distribution Management System</footer>
+    </div>
+  </div>
+
+  <dialog id="customer-modal" class="modal"><form id="customer-form" class="modal-form"><div class="modal-header"><h2>Yangi mijoz</h2><button class="icon-btn" type="button" data-close-modal aria-label="Yopish">×</button></div><div class="form-stack"><label for="customer-name">Mijoz nomi *</label><input id="customer-name" name="name" required minlength="2" maxlength="160"><label for="customer-phone">Telefon</label><input id="customer-phone" name="phone" type="tel" maxlength="40"><label for="customer-address">Manzil</label><input id="customer-address" name="address" maxlength="300"><label for="customer-limit">Kredit limiti (so‘m)</label><input id="customer-limit" name="credit_limit" type="number" min="0" step="1" value="0"></div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-close-modal>Bekor qilish</button><button class="btn btn-primary" type="submit">Saqlash</button></div></form></dialog>
+
+  <dialog id="product-modal" class="modal"><form id="product-form" class="modal-form"><div class="modal-header"><h2>Yangi mahsulot</h2><button class="icon-btn" type="button" data-close-modal aria-label="Yopish">×</button></div><div class="form-stack"><label for="product-name">Mahsulot nomi *</label><input id="product-name" name="name" required minlength="2" maxlength="160"><label for="product-price">Narx (so‘m/kg) *</label><input id="product-price" name="price_per_kg" type="number" min="1" step="1" required><label for="product-min-stock">Minimal qoldiq (kg)</label><input id="product-min-stock" name="min_stock_kg" type="number" min="0" step="0.001" value="0"></div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-close-modal>Bekor qilish</button><button class="btn btn-primary" type="submit">Saqlash</button></div></form></dialog>
+
+  <dialog id="stock-modal" class="modal"><form id="stock-form" class="modal-form"><div class="modal-header"><h2>Omborga kirim</h2><button class="icon-btn" type="button" data-close-modal aria-label="Yopish">×</button></div><div class="form-stack"><label for="stock-product">Mahsulot *</label><select id="stock-product" name="product_id" required><option value="">Tanlang</option></select><label for="stock-quantity">Miqdor (kg) *</label><input id="stock-quantity" name="quantity_kg" type="number" min="0.001" step="0.001" required><label for="stock-note">Izoh</label><textarea id="stock-note" name="note" rows="2" maxlength="500"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-close-modal>Bekor qilish</button><button class="btn btn-primary" type="submit">Kirim qilish</button></div></form></dialog>
+
+  <dialog id="payment-modal" class="modal"><form id="payment-form" class="modal-form"><div class="modal-header"><h2>To‘lov kiritish</h2><button class="icon-btn" type="button" data-close-modal aria-label="Yopish">×</button></div><div class="form-stack"><label for="payment-customer">Mijoz *</label><select id="payment-customer" name="customer_id" required><option value="">Tanlang</option></select><label for="payment-amount">Summa (so‘m) *</label><input id="payment-amount" name="amount" type="number" min="1" step="1" required><label for="payment-note">Izoh</label><textarea id="payment-note" name="note" rows="2" maxlength="500"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-close-modal>Bekor qilish</button><button class="btn btn-primary" type="submit">To‘lovni saqlash</button></div></form></dialog>
+
+  <dialog id="news-modal" class="modal"><form id="news-form" class="modal-form"><div class="modal-header"><h2>Yangi e’lon</h2><button class="icon-btn" type="button" data-close-modal aria-label="Yopish">×</button></div><div class="form-stack"><label for="news-title-input">Sarlavha *</label><input id="news-title-input" name="title" required minlength="2" maxlength="200"><label for="news-message">Xabar *</label><textarea id="news-message" name="message" rows="5" required minlength="2" maxlength="3000"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-close-modal>Bekor qilish</button><button class="btn btn-primary" type="submit">E’lon qilish</button></div></form></dialog>
+
+  <dialog id="order-modal" class="modal modal--wide"><form id="order-form" class="modal-form"><div class="modal-header"><h2>Yangi buyurtma</h2><button class="icon-btn" type="button" data-close-modal aria-label="Yopish">×</button></div><div class="form-stack"><label for="order-customer">Mijoz *</label><select id="order-customer" name="customer_id" required><option value="">Mijozni tanlang</option></select><div class="row-between"><strong>Mahsulotlar</strong><button id="add-order-line" class="btn btn-outline btn-small" type="button">+ Qator qo‘shish</button></div><div id="order-lines" class="order-lines"></div><label for="order-note">Buyurtma izohi</label><textarea id="order-note" name="note" rows="2" maxlength="500"></textarea></div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-close-modal>Bekor qilish</button><button class="btn btn-primary" type="submit">Buyurtma yaratish</button></div></form></dialog>
+
+  <dialog id="order-detail-modal" class="modal modal--wide"><div class="modal-form"><div class="modal-header"><h2 id="order-detail-title">Buyurtma tafsiloti</h2><button class="icon-btn" type="button" data-close-modal aria-label="Yopish">×</button></div><div id="order-detail-content" class="order-detail-content"></div><div class="modal-actions"><button class="btn btn-ghost" type="button" data-close-modal>Yopish</button></div></div></dialog>
+
+  <template id="order-line-template"><div class="order-line"><label><span class="sr-only">Mahsulot</span><select class="order-line-product" required><option value="">Mahsulotni tanlang</option></select></label><label><span class="sr-only">Buyurtma kg</span><input class="order-line-kg" type="number" min="0.001" step="0.001" required placeholder="KG"></label><button class="icon-btn remove-order-line" type="button" aria-label="Qatorni o‘chirish">×</button></div></template>
+</body>
+</html>
